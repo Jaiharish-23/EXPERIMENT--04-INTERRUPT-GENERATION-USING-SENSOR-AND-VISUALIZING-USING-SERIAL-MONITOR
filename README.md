@@ -138,6 +138,7 @@ static void MX_USART2_UART_Init(void);
 #if defined(_GNUC_)
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 #endif
+
 int main(void)
 {
   HAL_Init();                 
@@ -147,21 +148,31 @@ int main(void)
 
   while (1)
   {        
+    
   }
 }
-void HAL_GPIO_EXIT_Callback(uint16_t GPIO_PIN)
-{
-	if(HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_4)==1)
-	{
-		printf("INTERUPT GENERATED \n");
 
-	}
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    if (GPIO_Pin == GPIO_PIN_4) // Check if interrupt from pin PB4
+    {
+        if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4) == GPIO_PIN_SET)
+        {
+            printf("Obstacle Detected\n");
+        }
+        else
+        {
+            printf("Obstacle not Detected\n");
+        }
+    }
 }
+
 PUTCHAR_PROTOTYPE
 {
-	HAL_UART_Transmit(&huart2, (uint8_t*)&ch,1,0xFFFF);
-	return ch;
+    HAL_UART_Transmit(&huart2, (uint8_t*)&ch, 1, HAL_MAX_DELAY);
+    return ch;
 }
+
 
 ```
 
